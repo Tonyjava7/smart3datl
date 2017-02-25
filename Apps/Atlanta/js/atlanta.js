@@ -5,6 +5,8 @@ function startup(Cesium) {
 
     window.Cesium = Cesium;
 
+    Smart3DATL.Model.init();
+
     Smart3DATL.Data.buildings().then(function(buildings) {
         Smart3DATL.Model.create(buildings);
     });

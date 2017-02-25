@@ -26,7 +26,7 @@ Smart3DATL.Model = (function() {
         return entity;
     }
 
-    function create(buildingsData) {
+    function init() {
         //Sandcastle_Begin
         /*
         var viewer = new Cesium.Viewer('cesiumContainer', {
@@ -46,7 +46,9 @@ Smart3DATL.Model = (function() {
             selectionIndicator : false,
             shadows : false
         });
+    }
 
+    function create(buildingsData) {
         for (var i = 0; i < buildingsData.length && i < 1000; i++) {
             var item = buildingsData[i];
             buildings.push(appendBuilding(item[0],item[1],item[2]));
@@ -59,6 +61,7 @@ Smart3DATL.Model = (function() {
     }
 
     return {
+        init: init,
         create: create,
         heatMap: createHeatMap,
         viewer: viewer
