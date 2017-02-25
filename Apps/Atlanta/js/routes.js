@@ -27,7 +27,7 @@ Smart3DATL.Routes = (function() {
 
 			if (Smart3DATL.checkBoundaries(latitude, longitude)) {
 				if (buses[data[i].VEHICLE]) {
-					buses[data[i].VEHICLE].position = Cesium.Cartesian3.fromDegrees(long, lat, 0);
+					buses[data[i].VEHICLE].position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
 				} else {
 					buses[data[i].VEHICLE] = createRoute(viewer, latitude, longitude);
 				}
