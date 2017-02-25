@@ -11,7 +11,7 @@ function startup(Cesium) {
         Smart3DATL.Model.create(buildings);
     });
     Smart3DATL.Data.stops().then(function(stops) {
-        Smart3DATL.Stops.create(Smart3DATL.Model.viewer, stops);
+        Smart3DATL.Stops.create(Smart3DATL.Model.viewer(), stops);
     });
 
     function loaded() {

@@ -64,6 +64,8 @@ Smart3DATL.Model = (function() {
         init: init,
         create: create,
         heatMap: createHeatMap,
-        viewer: viewer
+        viewer: function() {
+            return viewer;
+        }
     };
 })();
