@@ -1,0 +1,14 @@
+{ 
+	"db": "mongodb://localhost:27017",
+	"server": {
+		"port": 3000,
+		"address": "0.0.0.0"
+	},
+	"accessControl": {
+		"allowOrigin": "*",
+		"allowMethods": "GET,POST,PUT,DELETE,HEAD,OPTIONS",
+		"allowCredentials": false
+	},
+	"humanReadableOutput": false,
+	"urlPrefix": ""
+}

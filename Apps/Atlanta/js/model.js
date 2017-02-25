@@ -14,12 +14,12 @@ Smart3DATL.Model = (function() {
         
         var ccode = new Cesium.Color(colorRed,2.0,colorBlue, 1.0);
 
-        entity = viewer.entities.add({
+        var entity = viewer.entities.add({
             name : url,
             position : position,
             model : {
                 uri : url,
-                color : ccode,
+                color : ccode
             }
         });
 
@@ -44,14 +44,31 @@ Smart3DATL.Model = (function() {
         viewer = new Cesium.Viewer('cesiumContainer', {
             infoBox : false,
             selectionIndicator : false,
-            shadows : false
+            shadows : false,
+            animation: false,
+            timeline: false,
+            infoBox: false,
+            navigationHelpButton: false,
+            homeButton: false,
+            scene3DOnly: true
+        });
+
+        var position = Cesium.Cartesian3.fromDegrees(-84.38798, 33.774405, 5000.0);
+
+        viewer.camera.setView({
+            destination : position,
+            orientation: {
+                heading : 0.0,
+                pitch : -Cesium.Math.PI_OVER_TWO,
+                roll : 0.0
+            }
         });
     }
 
     function create(buildingsData) {
         for (var i = 0; i < buildingsData.length && i < 1000; i++) {
             var item = buildingsData[i];
-            buildings.push(appendBuilding(item[0],item[1],item[2]));
+            appendBuilding(item[0],item[1],item[2]);
         }
         return viewer;
     }
