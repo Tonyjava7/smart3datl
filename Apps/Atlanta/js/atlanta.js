@@ -12,10 +12,11 @@ function startup(Cesium) {
     Smart3DATL.Model.init();
 
     Smart3DATL.Data.buildings().then(function(buildings) {
-        //Smart3DATL.Model.create(buildings);
+        Smart3DATL.Model.create(buildings);
+        heatmapUpdate('off');
     });
     Smart3DATL.Data.stops().then(function(stops) {
-        //Smart3DATL.Stops.create(Smart3DATL.Model.viewer(), stops);
+        Smart3DATL.Stops.create(Smart3DATL.Model.viewer(), stops);
     });
 
     var updateBuses = function() {
@@ -25,6 +26,15 @@ function startup(Cesium) {
         });
     };
     updateBuses();
+
+    // Update with navigation events
+    // type = on, off, delta
+    var heatmapUpdate = function(type) {
+        Smart3DATL.Data.heatmap(type).then(function(heatmapData) {
+            Smart3DATL.Model.heatmap(heatmapData);
+        });
+    };
+
 
     function loaded() {
         var loader = document.querySelector('.sandcastle-loading');
