@@ -35,5 +35,8 @@ Smart3DATL.Data = (function() {
         allBuses: function() {
         	return load('allBuses', '/proxy/http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
         }
+        heatmap: function(type) {
+        	return load('heatmap_' + type, path + type + '.json');
+        },
     };
 })();
