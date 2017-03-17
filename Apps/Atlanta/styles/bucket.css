@@ -57,3 +57,12 @@ body {
     padding: 2px 5px;
     position: absolute;
 }
+
+nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background:green;
+    z-index: 1000;
+    padding: 10px;
+}

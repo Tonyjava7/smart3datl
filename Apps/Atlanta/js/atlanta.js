@@ -1,7 +1,8 @@
 var Smart3DATL = Smart3DATL || {};
 
 Smart3DATL.checkBoundaries = function(latitude, longitude) {
-    return ((longitude >= -84.405919) && (longitude <= -84.337190)) || ((latitude >= 33.761399) && (latitude <= 33.794855));
+    //return ((longitude >= -84.405919) && (longitude <= -84.337190)) && ((latitude >= 33.761399) && (latitude <= 33.794855));
+    return ((longitude >= -84.405919) && (longitude <= -84.377190)) && ((latitude >= 33.761399) && (latitude <= 33.784855));
 };
 
 function startup(Cesium) {
@@ -22,7 +23,7 @@ function startup(Cesium) {
     var updateBuses = function() {
         Smart3DATL.Data.allBuses().then(function(routes) {
             Smart3DATL.Routes.create(Smart3DATL.Model.viewer(), routes);
-            setTimeout(updateBuses, 5000);
+            setTimeout(updateBuses, 1000);
         });
     };
     updateBuses();
@@ -41,6 +42,16 @@ function startup(Cesium) {
         loader.className = '';
     }
     loaded();
+
+    var heatmapMode = "off";
+    document.querySelector('nav').addEventListener('click', function() {
+        if(heatmapMode == "off") {
+            heatmapMode = "on";
+        } else {
+            heatmapMode = "off";
+        }
+        heatmapUpdate(heatmapMode);
+    });
 
 /*
     Sandcastle.addToggleButton('Shadows', viewer.shadows, function(checked) {

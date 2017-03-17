@@ -2,6 +2,7 @@ var Smart3DATL = Smart3DATL || {};
 Smart3DATL.Model = (function() {
     var viewer;
     var buildings = [];
+    var buildingsData2 ;
 
     function appendBuilding(url, latitude, longitude, last) {
 
@@ -66,21 +67,40 @@ Smart3DATL.Model = (function() {
     }
 
     function create(buildingsData) {
-        for (var i = 0; i < buildingsData.length && i < 1000; i++) {
+        buildingsData2 = buildingsData;
+        for (var i = 0; i < buildingsData.length; i++) {
             var item = buildingsData[i];
-            appendBuilding(item[0],item[1],item[2]);
+            if (Smart3DATL.checkBoundaries(item[1],item[2])) {
+                buildings.push(appendBuilding(item[0],item[1],item[2]));
+            }
         }
         return viewer;
     }
 
-    function createHeatMap(data) {
+    function createHeatMap(heatmapData) {
+        
+        for (var j=0; j<buildings.length; j++){
+            
+            
+            var heatRed = 0 ;
+            var heatBlue = 0 ;
+            for (var k=0; k<heatmapData.length; k++){
+                
+                 heatRed = 0.2*heatmapData[k]["Grand Total"]*Math.sqrt((buildingsData2[j][1] - heatmapData[k]["latitude"])*(buildingsData2[j][1] - heatmapData[k]["latitude"]) + (buildingsData2[j][2] - heatmapData[k]["longitude"])*(buildingsData2[j][2] - heatmapData[k]["longitude"])) + heatRed ;
+                 heatBlue = 0.2*heatmapData[k]["Grand Total"]*Math.sqrt((buildingsData2[j][1] - heatmapData[k]["latitude"])*(buildingsData2[j][1] - heatmapData[k]["latitude"]) + (buildingsData2[j][2] - heatmapData[k]["longitude"])*(buildingsData2[j][2] - heatmapData[k]["longitude"])) + heatBlue ;
+                 var heatColor = new Cesium.Color(heatRed,10-heatRed,0.5,1.0);
+                 buildings[j].model.color = heatColor;
+                 //console.log(heatColor);
+            }
+            
+        }
         // To Do
     }
 
     return {
         init: init,
         create: create,
-        heatMap: createHeatMap,
+        heatmap: createHeatMap,
         viewer: function() {
             return viewer;
         }

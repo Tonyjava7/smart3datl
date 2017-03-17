@@ -19,8 +19,8 @@ Smart3DATL.Routes = (function() {
         return entity;
     }
 
-var deltaT, currentT, lastT;
-var countTime = 0;
+    var deltaT, currentT, lastT;
+    var countTime = 0;
 
     function create(viewer, data) {
         //Add code to create stops here
@@ -34,31 +34,35 @@ var countTime = 0;
             var tempLat = latitude;
             longitude = parseFloat(data[i].LONGITUDE);
             latitude = parseFloat(data[i].LATITUDE);
-            longitudeLast  = tempLong;
-            latitudeLast = tempLat;
-            longitudeVelocity = (longitude - longitudeLast) / deltaT;
-            latitudeVelocity = (latitude - latitudeLast) / deltaT;
-            
-            // debugger;
-            var position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
-            var heading = Math.atan(latitudeVelocity / longitudeVelocity);
-            var pitch = 0;
-            var roll = 0;
-            var hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
-            var orientation2 = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
-
 
             if (Smart3DATL.checkBoundaries(latitude, longitude)) {
+                longitudeLast  = tempLong;
+                latitudeLast = tempLat;
+                longitudeVelocity = (longitude - longitudeLast) / deltaT;
+                latitudeVelocity = (latitude - latitudeLast) / deltaT;
+
+                // debugger;
+                var position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
+
                 if (buses[data[i].VEHICLE]) {
                     buses[data[i].VEHICLE].position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
-                    if (orientation2.x + orientation2.y + orientation2.z + orientation2.w !== NaN) {
-                        // debugger;
-                         //buses[data[i].VEHICLE].orientation = orientation2;
-                    }
                 } else {
                     buses[data[i].VEHICLE] = createRoute(viewer, latitude, longitude);
                 }
                 buses[data[i].VEHICLE].updated = true;
+
+                if (longitudeVelocity) {
+                    var heading = Math.atan(latitudeVelocity / longitudeVelocity);
+                    var pitch = 0;
+                    var roll = 0;
+                    var hpr = new Cesium.HeadingPitchRoll(heading, pitch, roll);
+                    var orientation2 = Cesium.Transforms.headingPitchRollQuaternion(position, hpr);
+
+                    if (orientation2.x + orientation2.y + orientation2.z + orientation2.w !== NaN) {
+                        // debugger;
+                         buses[data[i].VEHICLE].orientation = orientation2;
+                    }
+                }
             }
         }
 
