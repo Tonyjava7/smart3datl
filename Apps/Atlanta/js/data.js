@@ -33,7 +33,8 @@ Smart3DATL.Data = (function() {
                     }), true);
         },
         allBuses: function() {
-            return load('allBuses', '/proxy/http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
+            //return load('allBuses', '/proxy/http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
+            return load('allBuses', 'http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
         },
         heatmap: function(type) {
             return load('heatmap_' + type, path + type + '.json');
