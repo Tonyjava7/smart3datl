@@ -8,7 +8,7 @@ Smart3DATL.Stops = (function() {
             parent : stopsEntities,
             position : position,
             model : {
-                uri : "../Atlanta/models/bus_stop.glb",
+                uri : "../Atlanta/models/bus-stop.glb",
                 minimumPixelSize : 128,
                 maximumScale : 60
             }
