@@ -26,8 +26,22 @@
     @import url(styles/bucket.css);
     #toolbar button { display: block; }
 </style>
-<nav>HEATMAP</nav>
 <div id="cesiumContainer" class="fullSize"></div>
+<nav>
+    <ul>
+        <li class="heatmap">
+            <label>Heatmap</label>
+            <ul>
+                <li class="on" data-mode="on"><label>On</label></li>
+                <li class="off" data-mode="off"><label>Off</label></li>
+                <li class="distance" data-mode="distance"><label>D</label></li>
+                <!-- li><label>Delay</label></li -->
+            </ul>
+        </li>
+        <li class="stops"><label>S</label></li>
+        <li class="routes"><label>R</label></li>
+    </ul>
+</nav>
 <div id="loadingOverlay"><h1>Loading...</h1></div>
 <script type="text/javascript" src="js/atlanta.js"></script>
 </body>

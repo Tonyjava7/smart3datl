@@ -1,13 +1,13 @@
 var Smart3DATL = Smart3DATL || {};
 Smart3DATL.Routes = (function() {
     var buses = {};
+    var routesEntities;
 
     function createRoute(viewer, lat, long) {
-        //console.log('createRoute', lat, long);
-            
         var position = Cesium.Cartesian3.fromDegrees(long, lat, 0);
 
         var entity = viewer.entities.add({
+            parent: routesEntities,
             position : position,
             model : {
                 uri : "../Atlanta/models/bus.glb",
@@ -22,7 +22,12 @@ Smart3DATL.Routes = (function() {
     var deltaT, currentT, lastT;
     var countTime = 0;
 
-    function create(viewer, data) {
+    function create(viewer, data, visibility) {
+        if (!routesEntities) {
+            routesEntities = viewer.entities.add(new Cesium.Entity());
+        }
+        show(visibility);
+
         //Add code to create stops here
         lastT = currentT; 
         currentT = new Date().getTime();
@@ -75,7 +80,14 @@ Smart3DATL.Routes = (function() {
         }
     }
 
+    function show(visibility) {
+        if (routesEntities) {
+            routesEntities.show = visibility;
+        }
+    }
+
     return {
-        create: create
+        create: create,
+        show: show
     };
 })();

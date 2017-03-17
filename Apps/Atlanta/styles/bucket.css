@@ -60,9 +60,79 @@ body {
 
 nav {
     position: absolute;
+    z-index: 1000;
+    top: 20px;
+    left: 20px;
+}
+
+nav ul {
+    padding: 0;
+}
+
+nav > ul {
+    display: flex;
+    overflow: visible;
+}
+
+nav > ul li {
+    overflow: hidden;
+    min-width: 30px;
+    display: inline-block;
+    position: relative;
+    z-index: 2000;
+    vertical-align: middle;
+    margin: 0 10px 10px 0;
+}
+
+nav > ul > li label {
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    vertical-align: middle;
+    text-align: center;
+    color: #FFF;
+    position: relative;
+    z-index: 2;
+    padding: 0 5px;
+    cursor: pointer;
+}
+
+nav > ul li:before {
+    content: " ";
+    background: #000000;
+    border-radius: 5px;
+    display: block;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+nav > ul > li ul {
+    overflow: hidden;
+    display: block;
+    width: 30px;
+    position: absolute;
     top: 0;
     left: 0;
-    background:green;
-    z-index: 1000;
-    padding: 10px;
+    z-index: 1;
+    padding-top: 30px;
+}
+
+nav > ul ul li {
+    margin: 10px 0 0;
+}
+
+nav > ul li.active {
+    overflow: visible;
+}
+
+nav > ul li.active:before {
+    background: magenta;
+}
+
+nav > ul li.active ul {
 }
