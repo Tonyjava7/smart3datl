@@ -4,22 +4,23 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
-    <meta name="description" content="Use Viewer to start building new applications or easily embed Cesium into existing applications.">
+    <meta name="description" content="Atlanta3D">
     <meta name="cesium-sandcastle-labels" content="Beginner, Showcases">
-    <title>Cesium Demo</title>
+    <title>Atlanta3D</title>
+    <script type="text/javascript" src="../../Build/Cesium/Cesium.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/model.js"></script>
     <script type="text/javascript" src="js/stops.js"></script>
     <script type="text/javascript" src="js/routes.js"></script>
     <script type="text/javascript" src="data/stops.js"></script>
     <script type="text/javascript" src="data/buildings.js"></script>
-    <script type="text/javascript" src="../../ThirdParty/requirejs-2.1.20/require.js"></script>
+    <!-- script type="text/javascript" src="../../ThirdParty/requirejs-2.1.20/require.js"></script>
     <script type="text/javascript">
     require.config({
         baseUrl : '../../Source',
         waitSeconds : 60
     });
-    </script>
+    </script -->
 </head>
 <body class="sandcastle-loading">
 <style>
@@ -32,8 +33,8 @@
         <li class="heatmap">
             <label>Heatmap</label>
             <ul>
-                <li class="on" data-mode="on"><label>On</label></li>
-                <li class="off" data-mode="off"><label>Off</label></li>
+                <li class="on" data-mode="on"><label>Origin</label></li>
+                <li class="off" data-mode="off"><label>Destination</label></li>
                 <li class="distance" data-mode="distance"><label>Distance to North Ave</label></li>
                 <!-- li><label>Delay</label></li -->
             </ul>
@@ -44,5 +45,20 @@
 </nav>
 <div id="loadingOverlay"><h1>Loading...</h1></div>
 <script type="text/javascript" src="js/atlanta.js"></script>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOhNg9t5LNm03FUUyN85jZE5c3R1IHKJk&libraries=places">
+</script>
+<div id="placeDetails"></div>
+<div class="placeholders">
+    <div class="place-details">
+        <p class="name"></p>
+        <p class="address"></p>
+        <p class="vecinity"></p>
+        <p class="phone"></p>
+        <p class="type"></p>
+        <p class="website">Website: <a></a></p>
+        <img width="40%"\ style="float:left; margin: 1em 1em 1em 1em;" src=""/>
+    </div>
+</div>
 </body>
 </html>

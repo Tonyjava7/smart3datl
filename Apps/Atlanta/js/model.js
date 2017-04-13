@@ -6,6 +6,8 @@ Smart3DATL.Model = (function() {
     var buildingsEntities;
     var colorOpacity = 0.5;
 
+    var geocoder,
+        mapsService;
 
     function appendBuilding(url, latitude, longitude, last) {
 
@@ -15,61 +17,19 @@ Smart3DATL.Model = (function() {
         var ccode = new Cesium.Color(1,1,1,colorOpacity);
         var entity = viewer.entities.add({
             parent: buildingsEntities,
-            name : url,
+            name : '[' + latitude + ',' + longitude + ']',
             position : position,
             model : {
                 uri : url,
                 color : ccode
             },
 			// Properties KURT
-			description:
-			
-			'This position of this building is [' +
-			
-			[latitude,longitude] + 
-			
-			']' +
-			
-			'\
-			<img\
-			  width="40%"\
-			  style="float:left; margin: 1em 1em 1em 1em;"\
-			  src="https://wdanielanderson.files.wordpress.com/2015/02/bankofamerica-atlanta-feb09.jpg"/>\
-			<p>\
-			  93rd-tallest building in the world,\
-			  13th-tallest in the U.S. \
-			  Has been the tallest building in Atlanta, Georgia and the Southern United States since 1992.\
-			  Tallest building in any U.S. state capital.\
-			  It will be surpassed by the Salesforce Tower in \
-			  San Francisco and the Comcast Technology Center in \
-			  Philadelphia which are under construction. Tallest \
-			  building in the U.S. located outside of New York \
-			  City and Chicago. Tallest building constructed \
-			  in Atlanta and the U.S. in the 1990s.\
-			</p>\
-			  Bank of America Plaza is a skyscraper located\
-			  in between Midtown Atlanta and Downtown Atlanta.\
-			  At 312 m (1,024 ft) the tower is the 87th-tallest \
-			  building in the world. It is the 11th tallest \
-			  building in the U.S.,[6] the tallest building in Georgia\
-			  and the tallest building in any U.S. state capital.\
-			  It has 55 stories of office space and was completed in 1992,\
-			  when it was called NationsBank Plaza.\
-			  Originally intended to be the headquarters\
-			  for Citizens & Southern National Bank (which merged \
-			  with Sovran Bank during construction), it became \
-			  NationsBank property following its formation\
-			  in the 1991 hostile takeover of C&S/Sovran by NCNB.\
-			<p>\
-			  Source: \
-			  <a style="color: WHITE"\
-				target="_blank"\
-				href="http://en.wikipedia.org/wiki/Bank_of_America_Plaza_(Atlanta)">Wikpedia</a>\
-			</p>'
-			
-			// Properties KURT
+            description: 'Loading details ...'
 			
         });
+
+        entity._latitude = latitude;
+        entity._longitude = longitude;
 
         return entity;
     }
@@ -98,7 +58,13 @@ Smart3DATL.Model = (function() {
             infoBox: true,
             navigationHelpButton: false,
             homeButton: false,
-            scene3DOnly: true
+            scene3DOnly: true,
+            //Hide the base layer picker
+            baseLayerPicker : false,
+            //Use OpenStreetMaps
+            imageryProvider : Cesium.createOpenStreetMapImageryProvider({
+                url : 'https://a.tile.openstreetmap.org/'
+            }),
         });
 		
 		// ---------------------------------- KURT EDIT HIGHLIGHT ------------------------------------------------------------------------------------------ //
@@ -169,6 +135,157 @@ Smart3DATL.Model = (function() {
                 pitch : -Cesium.Math.PI_OVER_TWO,
                 roll : 0.0
             }
+        });
+
+        var handler = new Cesium.ScreenSpaceEventHandler(viewer.scene.canvas);
+        handler.setInputAction(function(click) {
+
+            var pickedObject = viewer.scene.pick(click.position);
+            if (Cesium.defined(pickedObject) && pickedObject.id) {
+                if (pickedObject.placeDetails) {
+                    showPlaceDescription(pickedObject);
+                } else {
+                    getPlaceByCoordinates(
+                    //getBuildingInfoByNearbySearch(
+                        pickedObject
+                    );
+                }
+            }
+        }, Cesium.ScreenSpaceEventType.LEFT_CLICK);
+    }
+
+    function showPlaceDescription(place) {
+        var strDescription = '';
+        var info = place.placeDetails;
+
+        strDescription = '<h2>' + info.name + '</h2>';
+        if (info.formatted_address) {
+            strDescription += '<div><address>' + info.formatted_address + '</address></div>';
+        }
+        if (info.vicinity) {
+            //strDescription += '<div>Vicinity: ' + info.vicinity + '</div>';
+        }
+        
+        if (info.formatted_phone_number && info.international_phone_number) {
+            strDescription += '<div>Telephone: ' + 
+            '<span itemprop="telephone"><a href="tel:' + info.international_phone_number + '">' + info.formatted_phone_number + '</a></span>' + '</div>';
+        }
+        if (info.website) {
+            strDescription += '<div><a href="' + info.website + '">' + info.website + '</a></div>';
+        }
+
+        if (info && info.photos && info.photos.length > 0) {
+            strDescription += '<div style="height:300px;"><img width="40%"\ style="margin: 1em 1em 1em 1em;" src="' + info.photos[0].getUrl({'maxWidth': 400, 'maxHeight': 400}) + '"/></div>';
+        }
+
+        place.id.description = strDescription;
+    }
+
+    function getBuildingInfoByNearbySearch(pickedObject) {
+        //var infowindow = new google.maps.InfoWindow();
+        if (!mapsService) {
+            mapsService = new google.maps.places.PlacesService(document.getElementById('placeDetails')); // Map????
+        }
+
+        var latlng = {lat: pickedObject.id._latitude, lng: pickedObject.id._longitude};
+        mapsService.nearbySearch({
+            location: latlng,
+            radius: 100,
+        }, function(place, status) {
+            //console.log("getBuildingInfoByNearbySearch", place);
+        });
+    }
+
+    function geocodeLatLng(pickedObject, geocoder) {
+      var latlng = {lat: pickedObject.id._latitude, lng: pickedObject.id._longitude};
+
+      geocoder.geocode({'location': latlng}, function(results, status) {
+        if (status === 'OK') {
+          if (results[1]) {
+            pickedObject.placeObject = results[1];
+            pickedObject.placeDetails = results[1];
+            getBuildingInfo(pickedObject, results[1].place_id);
+            // Properties KURT
+          } else {
+            window.alert('No results found');
+          }
+        } else {
+          window.alert('Geocoder failed due to: ' + status);
+        }
+      }, function() {
+      });
+    }
+    function getPlaceByCoordinates(pickedObject) {
+        if (!geocoder) {
+            geocoder = new google.maps.Geocoder;
+        }
+        geocodeLatLng(pickedObject, geocoder);
+
+    }
+/*function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 8,
+    center: {lat: 40.731, lng: -73.997}
+  });
+  var geocoder = new google.maps.Geocoder;
+  var infowindow = new google.maps.InfoWindow;
+
+  document.getElementById('submit').addEventListener('click', function() {
+    geocodeLatLng(geocoder, map, infowindow);
+  });
+}
+
+function geocodeLatLng(geocoder, map, infowindow) {
+  var input = document.getElementById('latlng').value;
+  var latlngStr = input.split(',', 2);
+  var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+  geocoder.geocode({'location': latlng}, function(results, status) {
+    if (status === 'OK') {
+      if (results[1]) {
+        map.setZoom(11);
+        var marker = new google.maps.Marker({
+          position: latlng,
+          map: map
+        });
+        infowindow.setContent(results[1].formatted_address);
+        infowindow.open(map, marker);
+      } else {
+        window.alert('No results found');
+      }
+    } else {
+      window.alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
+*/
+    //placeID = 'ChIJN1t_tDeuEmsRUsoyG83frY4'
+    function getBuildingInfo(pickedObject, placeID) {
+        //var infowindow = new google.maps.InfoWindow();
+        if (!mapsService) {
+            mapsService = new google.maps.places.PlacesService(document.getElementById('placeDetails')); // Map????
+        }
+
+        mapsService.getDetails({
+            placeId: placeID
+        }, function(place, status) {
+            /*
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                var marker = new google.maps.Marker({
+                    map: map,
+                    position: place.geometry.location
+                });
+                google.maps.event.addListener(marker, 'click', function() {
+                    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' +
+                        'Place ID: ' + place.place_id + '<br>' +
+                        place.formatted_address + '</div>');
+                    infowindow.open(map, this);
+                });
+            }
+            */
+            console.log("Place Info", place);
+            pickedObject.id.name = place.name;
+            pickedObject.placeDetails = place;
+            showPlaceDescription(pickedObject);
         });
     }
 

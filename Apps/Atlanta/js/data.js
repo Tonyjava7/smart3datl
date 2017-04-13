@@ -9,8 +9,27 @@ Smart3DATL.Data = (function() {
                 fetch(url, options).then(function(response) {
                     collection[id] = response.json();
                     resolve(collection[id]);
-                }).catch(function(err) {
-                    reject(err);
+                }).catch(function(error) {
+                    reject(error);
+                });
+            } else {
+                resolve(collection[id]);
+            }
+        });
+        return promise;
+    }
+
+    function loadJsonp(id, url, update) {
+        var promise = new Promise(function(resolve, reject) {
+            if (!collection[id] || update) {
+                // load a data asynchronously
+                Cesium.loadJsonp(url).then(function(response) {
+                    // use the loaded data
+                    collection[id] = response;
+                    resolve(collection[id]);
+                }).otherwise(function(error) {
+                    // an error occurred
+                    reject(error);
                 });
             } else {
                 resolve(collection[id]);
@@ -33,11 +52,14 @@ Smart3DATL.Data = (function() {
                     }), true);
         },
         allBuses: function() {
-            //return load('allBuses', '/proxy/http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
-            return load('allBuses', 'http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
+            //return loadJsonp('allBuses', path + 'stops-small.json', true);
+            return load('allBuses', '/proxy/http://developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
+            //return loadJsonp('allBuses', '//developer.itsmarta.com/BRDRestService/RestBusRealTimeService/GetAllBus', true);
         },
         heatmap: function(type) {
             return load('heatmap_' + type, path + type + '.json');
-        }
+        },
+        load: load,
+        loadJsonp: loadJsonp
     };
 })();

@@ -29,6 +29,7 @@ function startup(Cesium) {
 	
     Smart3DATL.Model.init();
 
+
     Smart3DATL.Data.buildings().then(function(buildings) {
         Smart3DATL.Model.create(buildings);
         heatmapUpdate();
@@ -71,51 +72,6 @@ function startup(Cesium) {
         loader.className = '';
     }
     loaded();
-	
-	
-	
-	
-
-    //Heat map Nav
-    if (Smart3DATL.Nav.heatmap.active) {
-        document.querySelector('nav .heatmap').classList.add('active');
-        document.querySelector('nav .heatmap li.' + Smart3DATL.Nav.heatmap.mode).classList.add('active');
-
-    }
-    document.querySelectorAll('nav .heatmap li').forEach(function(item) { item.addEventListener('click', function() {
-        if (!item.classList.contains('active')) {
-            document.querySelector('nav .heatmap li.active').classList.remove('active');
-            item.classList.add('active');
-            Smart3DATL.Nav.heatmap.mode = item.dataset.mode;
-            heatmapUpdate();
-        }
-    })});
-
-    document.querySelector('nav .heatmap > label').addEventListener('click', function(label) {
-        document.querySelector('nav .heatmap').classList.toggle('active');
-        Smart3DATL.Nav.heatmap.active = !Smart3DATL.Nav.heatmap.active;
-        heatmapUpdate();
-    });
-
-    //Stops Nav
-    if (Smart3DATL.Nav.stops.active) {
-        document.querySelector('nav .stops').classList.add('active');
-    }
-    document.querySelector('nav .stops label').addEventListener('click', function(event) {
-        event.target.parentNode.classList.toggle('active');
-        Smart3DATL.Nav.stops.active = !Smart3DATL.Nav.stops.active;
-        Smart3DATL.Stops.show(Smart3DATL.Nav.stops.active);
-    });
-
-    //Routes Nav
-    if (Smart3DATL.Nav.routes.active) {
-        document.querySelector('nav .routes').classList.add('active');
-    }
-    document.querySelector('nav .routes label').addEventListener('click', function(event) {
-        event.target.parentNode.classList.toggle('active');
-        Smart3DATL.Nav.routes.active = !Smart3DATL.Nav.routes.active;
-        Smart3DATL.Routes.show(Smart3DATL.Nav.routes.active);
-    });
 
 
     //Heat map Nav
@@ -158,28 +114,12 @@ function startup(Cesium) {
         Smart3DATL.Nav.routes.active = !Smart3DATL.Nav.routes.active;
         Smart3DATL.Routes.show(Smart3DATL.Nav.routes.active);
     });
-
-/*
-    Sandcastle.addToggleButton('Shadows', viewer.shadows, function(checked) {
-        viewer.shadows = checked;
-    });
-*/
-
-/*
-var viewer = new Cesium.Viewer('cesiumContainer', {
-    selectionIndicator : false,
-    infoBox : false
-});
-
-var scene = viewer.scene;
-var handler;
-handler = new Cesium.ScreenSpaceEventHandler(scene.canvas);
-*/
-
-
 }
 if (typeof Cesium !== "undefined") {
     startup(Cesium);
 } else if (typeof require === "function") {
     require(["Cesium"], startup);
+}
+
+function initMap() {
 }

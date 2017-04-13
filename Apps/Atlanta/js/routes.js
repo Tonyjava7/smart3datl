@@ -3,17 +3,19 @@ Smart3DATL.Routes = (function() {
     var buses = {};
     var routesEntities;
 
-    function createRoute(viewer, lat, long) {
+    function createRoute(viewer, lat, long, routeData) {
         var position = Cesium.Cartesian3.fromDegrees(long, lat, 0);
 
         var entity = viewer.entities.add({
             parent: routesEntities,
             position : position,
+            name: routeData.ROUTE + ' ' + routeData.DIRECTION,
             model : {
                 uri : "../Atlanta/models/bus.glb",
                 minimumPixelSize : 128,
                 maximumScale : 20
-            }
+            },
+            description: 'Bus ' + routeData.VEHICLE
 
         });
         return entity;
@@ -52,7 +54,7 @@ Smart3DATL.Routes = (function() {
                 if (buses[data[i].VEHICLE]) {
                     buses[data[i].VEHICLE].position = Cesium.Cartesian3.fromDegrees(longitude, latitude, 0);
                 } else {
-                    buses[data[i].VEHICLE] = createRoute(viewer, latitude, longitude);
+                    buses[data[i].VEHICLE] = createRoute(viewer, latitude, longitude, data[i]);
                 }
                 buses[data[i].VEHICLE].updated = true;
 
@@ -74,6 +76,7 @@ Smart3DATL.Routes = (function() {
         for (let bus in buses) {
             if (buses[bus].updated) {
                 buses[bus].updated = false;
+                buses[bus].show = true;
             } else {
                 buses[bus].show = false;
             }
@@ -82,7 +85,7 @@ Smart3DATL.Routes = (function() {
 
     function show(visibility) {
         if (routesEntities) {
-            routesEntities.show = visibility;
+            routesEntities.show = visibility === true;
         }
     }
 
