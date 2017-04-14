@@ -162,9 +162,6 @@ Smart3DATL.Model = (function() {
         if (info.formatted_address) {
             strDescription += '<div><address>' + info.formatted_address + '</address></div>';
         }
-        if (info.vicinity) {
-            //strDescription += '<div>Vicinity: ' + info.vicinity + '</div>';
-        }
         
         if (info.formatted_phone_number && info.international_phone_number) {
             strDescription += '<div>Telephone: ' + 

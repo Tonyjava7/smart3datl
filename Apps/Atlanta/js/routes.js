@@ -14,8 +14,7 @@ Smart3DATL.Routes = (function() {
                 uri : "../Atlanta/models/bus.glb",
                 minimumPixelSize : 128,
                 maximumScale : 20
-            },
-            description: 'Bus ' + routeData.VEHICLE
+            }
 
         });
         return entity;
@@ -23,6 +22,17 @@ Smart3DATL.Routes = (function() {
 
     var deltaT, currentT, lastT;
     var countTime = 0;
+
+    function updateRouteData(bus, data) {
+        var strDescription = '<h2>' + data.ROUTE + ' ' + data.DIRECTION + '</h2>';
+
+        strDescription += '<div>Vehicle: ' + data.VEHICLE + '</div>';
+
+        strDescription += '<div>Stop: ' + data.TIMEPOINT + '</h2>';
+
+        bus.description = strDescription;
+    }
+
 
     function create(viewer, data, visibility) {
         if (!routesEntities) {
@@ -57,6 +67,8 @@ Smart3DATL.Routes = (function() {
                     buses[data[i].VEHICLE] = createRoute(viewer, latitude, longitude, data[i]);
                 }
                 buses[data[i].VEHICLE].updated = true;
+
+                updateRouteData(buses[data[i].VEHICLE], data[i]);
 
                 if (longitudeVelocity) {
                     var heading = Math.atan(latitudeVelocity / longitudeVelocity);
