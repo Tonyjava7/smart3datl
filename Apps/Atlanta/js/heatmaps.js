@@ -33,3 +33,15 @@ Smart3DATL.Heatmaps['Destination'] = {
     title: 'Destination',
     controller: ServiceMap
 };
+
+Smart3DATL.Heatmaps['Stops'] = {
+    options: {
+        navigation: true,
+        active: false
+    },
+    data: {
+        uri: '/Apps/Atlanta/data/stops.json'
+    },
+    title: 'Distance to Stops',
+    controller: DistanceMARTAStops
+};
