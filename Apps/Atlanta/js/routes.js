@@ -36,14 +36,13 @@ Smart3DATL.Routes = (function() {
         bus.description = strDescription;
 
         if (parseFloat(data.ADHERENCE) > 0) {
-            bus.model.color = new Cesium.Color(0,0,1,1);
+            bus.model.color = new Cesium.Color(0,0,1,0.5);
         } else if (parseFloat(data.ADHERENCE) < 0) {
-            bus.model.color = new Cesium.Color(1,0,0,1);
+            bus.model.color = new Cesium.Color(1,0,0,0.5);
         } else {
             bus.model.color = new Cesium.Color(1,1,1,1);
 
         }
-        console.log(bus.model.color);
     }
 
 

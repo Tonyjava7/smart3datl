@@ -1,18 +1,5 @@
 var Smart3DATL = Smart3DATL || {};
 
-Smart3DATL.Nav = {
-    heatmap: {
-        active: true,
-        mode: "distance"
-    },
-    stops: {
-        active: false
-    },
-    routes: {
-        active: false
-    }
-};
-
 Smart3DATL.checkBoundaries = function(latitude, longitude) {
     //Atlanta
     //return ((longitude >= -84.405919) && (longitude <= -84.337190)) && ((latitude >= 33.761399) && (latitude <= 33.794855));
@@ -21,99 +8,93 @@ Smart3DATL.checkBoundaries = function(latitude, longitude) {
     return ((longitude >= -84.405919) && (longitude <= -84.377190)) && ((latitude >= 33.761399) && (latitude <= 33.784855));
 };
 
+function addCollectionToNav(type) {
+    var li = document.querySelector('.placeholders .nav li').cloneNode(true);
+    li.querySelector('label').innerHTML = Smart3DATL.Collections[type].title?Smart3DATL.Collections[type].title:type;
+    li.classList.add(type.toLowerCase());
+    li.dataset.type = type;
+
+    if (Smart3DATL.Collections[type].options.active) {
+        li.classList.add('active');
+    }
+    li.querySelector('label').addEventListener('click', function(event) {
+        var node = event.target.parentNode;
+        Smart3DATL.Collections[type].options.active = !Smart3DATL.Collections[type].options.active;
+        node.classList.toggle('active', Smart3DATL.Collections[type].options.active);
+        Smart3DATL.Model.collection(node.dataset.type);
+        
+    });
+
+    document.querySelector('nav .collections').appendChild(li);
+}
+
+function activeHeatmap(type) {
+    var activeMap = document.querySelector('nav .heatmap li.active');
+    var activeType;
+    if (activeMap) {
+        activeType = activeMap.dataset.type;
+    }
+
+    if (activeType) {
+        document.querySelector('nav .heatmap li.active').classList.remove('active');
+        Smart3DATL.Heatmaps[activeType].options.active  = false;
+    }
+
+    if (activeType !== type){
+        Smart3DATL.Heatmaps[type].options.active = true;
+    } else {
+        Smart3DATL.Heatmaps[type].options.active = false;
+    }
+
+    return Smart3DATL.Heatmaps[type].options.active;
+}
+
+function addHeatmapToNav(type) {
+    var li = document.querySelector('.placeholders .nav li').cloneNode(true);
+    li.querySelector('label').innerHTML = Smart3DATL.Heatmaps[type].title?Smart3DATL.Heatmaps[type].title:type;
+    li.classList.add(type.toLowerCase());
+    li.dataset.type = type;
+
+    if (Smart3DATL.Heatmaps[type].options.active) {
+        li.classList.add('active');
+    }
+    li.querySelector('label').addEventListener('click', function(event) {
+        var node = event.target.parentNode;
+        if (activeHeatmap(node.dataset.type)) {
+            node.classList.add('active');
+        }
+        Smart3DATL.Model.heatmap();
+    });
+
+    document.querySelector('nav .heatmap').appendChild(li);
+}
+
 function startup(Cesium) {
     'use strict';
 
     window.Cesium = Cesium;
 	
-	
     Smart3DATL.Model.init();
 
-
-    Smart3DATL.Data.buildings().then(function(buildings) {
-        Smart3DATL.Model.create(buildings);
-        heatmapUpdate();
-    });
-    Smart3DATL.Data.stops().then(function(stops) {
-        Smart3DATL.Stops.create(Smart3DATL.Model.viewer(), stops, Smart3DATL.Nav.stops.active);
-    });
-
-    var updateBuses = function() {
-        Smart3DATL.Data.allBuses().then(function(routes) {
-            Smart3DATL.Routes.create(Smart3DATL.Model.viewer(), routes, Smart3DATL.Nav.routes.active);
-            setTimeout(updateBuses, 5000);
-        });
-    };
-    updateBuses();
-
-	
-    // Update with navigation events
-    // type = on, off, delta
-    var heatmapUpdate = function() {
-        var mode = Smart3DATL.Nav.heatmap.mode;
-        if (Smart3DATL.Nav.heatmap.active) {
-            if (mode == "on" || mode == "off") {
-                Smart3DATL.Data.heatmap(mode).then(function(heatmapData) {
-                    Smart3DATL.Model.heatmap(mode, heatmapData);
-                });
-            } else if (mode == "distance"){
-                Smart3DATL.Model.heatmap(mode);
-            } else {
-                Smart3DATL.Model.heatmap();
-            }
-        } else {
-            Smart3DATL.Model.heatmap();
+    for (var type in Smart3DATL.Collections) {
+        if (Smart3DATL.Collections[type].options.navigation) {
+            addCollectionToNav(type);
         }
-    };
+        Smart3DATL.Model.collection(type);
+    }
+
+    for (var type in Smart3DATL.Heatmaps) {
+        if (Smart3DATL.Heatmaps[type].options.navigation) {
+            addHeatmapToNav(type);
+        }
+        Smart3DATL.Model.heatmap(type);
+    }
 
 
     function loaded() {
-        var loader = document.querySelector('.sandcastle-loading');
-        loader.className = '';
+        document.querySelector('.sandcastle-loading').classList.remove('sandcastle-loading');
     }
     loaded();
-
-
-    //Heat map Nav
-    if (Smart3DATL.Nav.heatmap.active) {
-        document.querySelector('nav .heatmap').classList.add('active');
-        document.querySelector('nav .heatmap li.' + Smart3DATL.Nav.heatmap.mode).classList.add('active');
-
-    }
-    document.querySelectorAll('nav .heatmap li').forEach(function(item) { item.addEventListener('click', function() {
-        if (!item.classList.contains('active')) {
-            document.querySelector('nav .heatmap li.active').classList.remove('active');
-            item.classList.add('active');
-            Smart3DATL.Nav.heatmap.mode = item.dataset.mode;
-            heatmapUpdate();
-        }
-    })});
-
-    document.querySelector('nav .heatmap > label').addEventListener('click', function(label) {
-        document.querySelector('nav .heatmap').classList.toggle('active');
-        Smart3DATL.Nav.heatmap.active = !Smart3DATL.Nav.heatmap.active;
-        heatmapUpdate();
-    });
-
-    //Stops Nav
-    if (Smart3DATL.Nav.stops.active) {
-        document.querySelector('nav .stops').classList.add('active');
-    }
-    document.querySelector('nav .stops label').addEventListener('click', function(event) {
-        event.target.parentNode.classList.toggle('active');
-        Smart3DATL.Nav.stops.active = !Smart3DATL.Nav.stops.active;
-        Smart3DATL.Stops.show(Smart3DATL.Nav.stops.active);
-    });
-
-    //Routes Nav
-    if (Smart3DATL.Nav.routes.active) {
-        document.querySelector('nav .routes').classList.add('active');
-    }
-    document.querySelector('nav .routes label').addEventListener('click', function(event) {
-        event.target.parentNode.classList.toggle('active');
-        Smart3DATL.Nav.routes.active = !Smart3DATL.Nav.routes.active;
-        Smart3DATL.Routes.show(Smart3DATL.Nav.routes.active);
-    });
 }
 if (typeof Cesium !== "undefined") {
     startup(Cesium);

@@ -61,30 +61,55 @@ body {
 nav {
     position: absolute;
     z-index: 1000;
-    top: 20px;
-    left: 20px;
+    top: 0px;
+    left: 0px;
+    padding: 20px;
+    overflow: auto;
 }
 
+nav:before {
+    content: " ";
+    background: black;
+    display: block;
+    opacity: 0.6;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+nav > div {
+    position: relative;
+    z-index: 1;
+    padding:0;
+    overflow: hidden;
+}
+
+nav h2,
+nav h3 {
+    color: white;
+}
 nav ul {
     padding: 0;
-}
-
-nav > ul {
-    display: flex;
     overflow: visible;
+    position: relative;
+    z-index: 1;
 }
 
-nav > ul li {
+nav ul li {
     overflow: hidden;
     min-width: 30px;
-    display: inline-block;
+    display: block;
     position: relative;
     z-index: 2000;
     vertical-align: middle;
     margin: 0 10px 10px 0;
+    overflow: visible;
 }
 
-nav > ul > li label {
+nav ul li label {
     display: block;
     height: 30px;
     line-height: 30px;
@@ -98,9 +123,9 @@ nav > ul > li label {
     white-space: nowrap;
 }
 
-nav > ul li:before {
+nav ul li:before {
     content: " ";
-    background: #000000;
+    background: grey;
     border-radius: 5px;
     display: block;
     opacity: 0.6;
@@ -112,33 +137,23 @@ nav > ul li:before {
     z-index: 1;
 }
 
-nav > ul > li ul {
-    overflow: hidden;
-    display: block;
-    min-width: 30px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    padding-top: 30px;
-    white-space: pre-line;
-}
-
-nav > ul ul li {
-    margin: 10px 0 0;
-}
-
-nav > ul li.active {
+nav ul li.active {
     overflow: visible;
 }
 
-nav > ul li.active:before {
-    background: magenta;
+nav ul li:hover:before {
+    background: blue;
 }
 
-nav > ul li.active ul {
+nav ul li.active:before {
+    background: magenta;
 }
 
 .placeholders {
     display: none;
+}
+
+nav div:first-child {
+    border-bottom: 1px solid white;
+    padding-bottom: 10px;
 }

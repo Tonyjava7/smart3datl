@@ -8,12 +8,15 @@
     <meta name="cesium-sandcastle-labels" content="Beginner, Showcases">
     <title>Atlanta3D</title>
     <script type="text/javascript" src="../../Build/Cesium/Cesium.js"></script>
+    <script type="text/javascript" src="js/controllers/buildings.js"></script>
+    <script type="text/javascript" src="js/controllers/buses.js"></script>
+    <script type="text/javascript" src="js/controllers/stops.js"></script>
+    <script type="text/javascript" src="js/heatmaps/distanceNorthAve.js"></script>
+    <script type="text/javascript" src="js/heatmaps/serviceMap.js"></script>
+    <script type="text/javascript" src="js/collections.js"></script>
+    <script type="text/javascript" src="js/heatmaps.js"></script>
     <script type="text/javascript" src="js/data.js"></script>
     <script type="text/javascript" src="js/model.js"></script>
-    <script type="text/javascript" src="js/stops.js"></script>
-    <script type="text/javascript" src="js/routes.js"></script>
-    <script type="text/javascript" src="data/stops.js"></script>
-    <script type="text/javascript" src="data/buildings.js"></script>
     <!-- script type="text/javascript" src="../../ThirdParty/requirejs-2.1.20/require.js"></script>
     <script type="text/javascript">
     require.config({
@@ -29,27 +32,23 @@
 </style>
 <div id="cesiumContainer" class="fullSize"></div>
 <nav>
-    <ul>
-        <li class="heatmap">
-            <label>Heatmap</label>
-            <ul>
-                <li class="on" data-mode="on"><label>Origin</label></li>
-                <li class="off" data-mode="off"><label>Destination</label></li>
-                <li class="distance" data-mode="distance"><label>Distance to North Ave</label></li>
-                <!-- li><label>Delay</label></li -->
-            </ul>
-        </li>
-        <li class="stops"><label>Stops</label></li>
-        <li class="routes"><label>Routes</label></li>
+    <div>
+        <h2>Assets</h2>
+        <ul class="collections"></ul>
+    </div>
+    <div>
+        <h3>Heatmap</h3>
+        <ul class="heatmap"></ul>
     </ul>
 </nav>
 <div id="loadingOverlay"><h1>Loading...</h1></div>
-<script type="text/javascript" src="js/atlanta.js"></script>
-<!-- Replace the value of the key parameter with your own API key. -->
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOhNg9t5LNm03FUUyN85jZE5c3R1IHKJk&libraries=places">
-</script>
 <div id="placeDetails"></div>
 <div class="placeholders">
+    <div class="nav">
+        <ul>
+            <li><label></label></li>
+        </ul>
+    </div>
     <div class="place-details">
         <p class="name"></p>
         <p class="address"></p>
@@ -60,5 +59,9 @@
         <img width="40%"\ style="float:left; margin: 1em 1em 1em 1em;" src=""/>
     </div>
 </div>
+<script type="text/javascript" src="js/atlanta.js"></script>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOhNg9t5LNm03FUUyN85jZE5c3R1IHKJk&libraries=places">
+</script>
 </body>
 </html>
