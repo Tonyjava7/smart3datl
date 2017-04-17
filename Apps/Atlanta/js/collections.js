@@ -3,7 +3,7 @@ Smart3DATL.Collections = {};
 
 Smart3DATL.Collections['Buildings'] = {
     options: {
-        navigation: false,
+        navigation: true,
         heatmap: true,
         active: true
     },
