@@ -7,6 +7,6 @@ function ServiceMap(position, data) {
 		heatBlue = 0.2*data[k]["Grand Total"]*Math.sqrt(Math.pow(position.latitude - data[k]["latitude"], 2) + Math.pow(position.longitude - data[k]["longitude"], 2)) + heatBlue;
 	}
 
-	return new Cesium.Color(heatRed,10-heatRed,0.5,0.5);
+	return new Cesium.Color(heatRed,10-heatRed,0.5,1);
 }
 

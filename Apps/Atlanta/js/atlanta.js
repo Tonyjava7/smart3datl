@@ -1,11 +1,23 @@
 var Smart3DATL = Smart3DATL || {};
 
 Smart3DATL.checkBoundaries = function(latitude, longitude) {
+    var centralPoint = {
+        latitude: 33.77191,
+        longitude: -84.38717
+    };
     //Atlanta
     //return ((longitude >= -84.405919) && (longitude <= -84.337190)) && ((latitude >= 33.761399) && (latitude <= 33.794855));
 
     //North Avenue close to Georgia Tech
-    return ((longitude >= -84.405919) && (longitude <= -84.377190)) && ((latitude >= 33.761399) && (latitude <= 33.784855));
+    var radius = document.getElementById("loadRange").value/1000;
+    var bSquared = true;
+    if (bSquared) {
+        return  Math.abs(centralPoint.latitude - latitude) <= radius &&
+                Math.abs(centralPoint.longitude - longitude) <= radius;
+    } else {
+        return  Math.sqrt(Math.pow(centralPoint.latitude - latitude,2) +
+                Math.pow(centralPoint.longitude - longitude,2)) <= radius;
+    }
 };
 
 function addCollectionToNav(type) {
@@ -89,6 +101,17 @@ function startup(Cesium) {
         }
         Smart3DATL.Model.heatmap(type);
     }
+
+    document.getElementById("loadRange").addEventListener('change', function() {
+        console.log('loadRange', document.getElementById("loadRange").value);
+        for (var type in Smart3DATL.Collections) {
+            Smart3DATL.Model.collection(type);
+        }
+
+        for (var type in Smart3DATL.Heatmaps) {
+            Smart3DATL.Model.heatmap(type);
+        }
+    });
 
 
     function loaded() {

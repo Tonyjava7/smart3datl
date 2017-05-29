@@ -12,5 +12,5 @@ function DistanceNorthAve(position, reference) {
     var colorRed = 200*Math.sqrt(Math.pow(position.latitude - reference.latitude, 2) + Math.pow(position.longitude - reference.longitude, 2));
     var colorBlue = 200*Math.sqrt(Math.pow(position.latitude - reference.latitude, 2) + Math.pow(position.longitude - reference.longitude, 2));
     
-    return new Cesium.Color(colorRed,2.0,colorBlue, 0.5);
+    return new Cesium.Color(colorRed,2.0,colorBlue, 1);
 }

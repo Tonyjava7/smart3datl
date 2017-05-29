@@ -20,5 +20,5 @@ function DistanceMARTAStops(position, data) {
 		}
 	}
 
-	return new Cesium.Color(countRed,countGreen,0.5,0.5);
+	return new Cesium.Color(countRed,countGreen,0.5,1);
 }

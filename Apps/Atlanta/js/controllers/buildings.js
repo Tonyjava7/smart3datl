@@ -113,7 +113,7 @@ function Buildings(_data) {
     }
 
     function getColor() {
-        return new Cesium.Color(2,2,2,0.5);
+        return new Cesium.Color(2,2,2,2);
     }
 
     return {

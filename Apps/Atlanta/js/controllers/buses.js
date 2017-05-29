@@ -58,7 +58,15 @@ function MARTABuses(_data) {
 
         sDescription += '<div>Stop: ' + data.TIMEPOINT + '</h2>';
 
-        sDescription += '<div>Adherance: ' + data.ADHERENCE + '</h2>';
+
+        if (data.ADHERENCE < 0) {
+            sDescription += '<div class="late"><span style="display:inline-block; width:10px; height:10px; background:red;"></span> ' + ((-1)*data.ADHERENCE) + 'min Late</h2>';
+        } else if (data.ADHERENCE > 0) {
+            sDescription += '<div class="early"><span style="display:inline-block; width:10px; height:10px; background:blue;"></span> ' + data.ADHERENCE + 'min Early</h2>';
+        } else {
+            sDescription += '<div class="ontime"><span style="display:inline-block; width:10px; height:10px; background:green;"></span> On time</h2>';
+        }
+        //sDescription += '<div>Adherance: ' + data.ADHERENCE + '</h2>';
         
 
         return sDescription;
